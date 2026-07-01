@@ -3,6 +3,8 @@ import math
 import random
 
 pygame.init()
+score = 0
+font = pygame.font.Font(None,36)
 def is_collision(bullet_x, bullet_y, enemy_x, enemy_y):
 
     distance = math.sqrt(
@@ -10,10 +12,28 @@ def is_collision(bullet_x, bullet_y, enemy_x, enemy_y):
         (bullet_y - enemy_y) ** 2
     )
 
-    if distance < 40:
+    if distance < 20:
         return True
 
     return False
+
+def show_score():
+    score_text = font.render(
+        f"Score: {score}",
+        True,
+        (255, 255, 255)
+    )
+
+    screen.blit(score_text, (10, 10))
+
+def game_over():
+    text = font.render(
+        "GAME OVER",
+        True,
+        (255, 0, 0)
+    )
+
+    screen.blit(text, (300, 250))
 
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Space Shooter")
@@ -84,10 +104,24 @@ while running:
 
         bullet_y -= bullet_speed
 
-    enemy_x += enemy_speed
+    enemy_x += enemy_speed * enemy_direction
 
-    if enemy_x > 800:
-        enemy_x = 0
+    if enemy_y >= player_y:
+        game_over()
+        pygame.display.update()
+        pygame.time.delay(3000)
+        running = False
+
+    if not running:
+        continue
+
+    if enemy_x >= 750:
+        enemy_direction = -1
+        enemy_y += 40
+
+    if enemy_x <= 0:
+        enemy_direction = 1
+        enemy_y += 40
 
     collision = is_collision(
     bullet_x,
@@ -96,20 +130,23 @@ while running:
     enemy_y
     )
 
-    if collision:
+    if collision and enemy_y < player_y:
+
+        score += 1
 
         bullet_state = "ready"
         bullet_y = player_y
 
         enemy_x = random.randint(0, 750)
         enemy_y = 50
-        enemy_speed += 0.2
+        enemy_speed += 0.1
 
     pygame.draw.rect(
     screen,
     (255, 0, 0),
     (enemy_x, enemy_y, 50, 50)
     )
+    show_score()
 
     pygame.display.update()
 
