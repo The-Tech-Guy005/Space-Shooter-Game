@@ -3,6 +3,19 @@ import math
 import random
 
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.set_num_channels(16)
+
+laser_sound = pygame.mixer.Sound("sounds/laser.wav")
+explosion_sound = pygame.mixer.Sound("sounds/explosion.wav")
+explosion_sound.set_volume(1.0)
+
+pygame.mixer.music.load(
+    "sounds/background.wav"
+)
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1)
+
 score = 0
 font = pygame.font.Font(None,36)
 def is_collision(bullet_x, bullet_y, enemy_x, enemy_y):
@@ -43,11 +56,18 @@ player_x = 375
 player_y = 450
 player_speed = 10
 
-enemy_x = 350
-enemy_y = 50
+num_enemies = 5
 
-enemy_speed = 1
-enemy_direction = 1
+enemy_x = []
+enemy_y = []
+enemy_speed = []
+enemy_direction = []
+
+for i in range(num_enemies):
+    enemy_x.append(random.randint(0, 750))
+    enemy_y.append(random.randint(50, 150))
+    enemy_speed.append(1)
+    enemy_direction.append(1)
 
 bullet_x = 0
 bullet_y = player_y
@@ -70,6 +90,7 @@ while running:
             if event.key == pygame.K_SPACE:
                 
                 if bullet_state == "ready":
+                    laser_sound.play()
                     bullet_x = player_x + 20
                     bullet_y = player_y
                     bullet_state = "fire"
@@ -101,51 +122,55 @@ while running:
             (255, 255, 0),
             (bullet_x, bullet_y, 5, 20)
         )
-
         bullet_y -= bullet_speed
 
-    enemy_x += enemy_speed * enemy_direction
+    for i in range(num_enemies):
 
-    if enemy_y >= player_y:
-        game_over()
-        pygame.display.update()
-        pygame.time.delay(3000)
-        running = False
+        enemy_x[i] += enemy_speed[i] * enemy_direction[i]
 
-    if not running:
-        continue
+        if enemy_y[i] >= player_y:
+            game_over()
+            pygame.display.update()
+            pygame.time.delay(3000)
+            running = False
 
-    if enemy_x >= 750:
-        enemy_direction = -1
-        enemy_y += 40
+        if not running:
+            continue
 
-    if enemy_x <= 0:
-        enemy_direction = 1
-        enemy_y += 40
+        if enemy_x[i] >= 750:
+            enemy_direction[i] = -1
+            enemy_y[i] += 40
+
+        if enemy_x[i] <= 0:
+            enemy_direction[i] = 1
+            enemy_y[i] += 40
+
+        pygame.draw.rect(
+        screen,
+        (255, 0, 0),
+        (enemy_x[i], enemy_y[i], 50, 50)
+        )
 
     collision = is_collision(
     bullet_x,
     bullet_y,
-    enemy_x,
-    enemy_y
+    enemy_x[i],
+    enemy_y[i]
     )
 
-    if collision and enemy_y < player_y:
-
+    if collision and enemy_y[i] < player_y:
+        explosion_sound.play()
+        
         score += 1
 
         bullet_state = "ready"
         bullet_y = player_y
 
-        enemy_x = random.randint(0, 750)
-        enemy_y = 50
-        enemy_speed += 0.1
+        enemy_x[i] = random.randint(0, 750)
+        enemy_y[i] = random.randint(50,150)
+        enemy_speed[i] += 0.01
 
-    pygame.draw.rect(
-    screen,
-    (255, 0, 0),
-    (enemy_x, enemy_y, 50, 50)
-    )
+   
     show_score()
 
     pygame.display.update()
