@@ -215,6 +215,15 @@ while running:
         bullet_state = "ready"
         bullet_y = player_y
 
+    if score > 300:
+        bullet_speed = 22
+
+    if score > 500:
+        bullet_speed = 25
+
+    else:
+        bullet_speed = 20
+
     if bullet_state == "fire":
         pygame.draw.rect(
             screen,
@@ -224,6 +233,27 @@ while running:
         bullet_y -= bullet_speed
 
     for i in range(num_enemies):
+
+        if score < 50:
+            enemy_speed[i] = 3
+
+        elif score < 100:
+            enemy_speed[i] = 4
+
+        elif score < 200:
+            enemy_speed[i] = 5
+
+        elif score < 300:
+            enemy_speed[i] = 6
+
+        elif score < 400:
+            enemy_speed[i] = 7
+
+        elif score < 500:
+            enemy_speed[i] = 8
+
+        else:
+            enemy_speed[i] = 10
 
         enemy_x[i] += enemy_speed[i] * enemy_direction[i]
 
@@ -276,6 +306,16 @@ while running:
         
             score += 1
 
+            if score in [20, 50, 100, 200, 300, 400, 500]:
+
+               for j in range(5):
+                enemy_x.append(random.randint(0, 750))
+                enemy_y.append(random.randint(50, 150))
+                enemy_speed.append(3)
+                enemy_direction.append(1)
+
+               num_enemies += 5
+
             if score > high_score:
                 high_score = score
 
@@ -288,7 +328,7 @@ while running:
 
             enemy_x[i] = random.randint(0, 750)
             enemy_y[i] = random.randint(50,150)
-            enemy_speed[i] += 0.15
+            
 
         if enemy_y[i] + 50 >= player_y:
             game_over()
