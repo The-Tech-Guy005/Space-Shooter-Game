@@ -59,6 +59,17 @@ python main.py
 - Health bar
 - Leaderboard
 
+## 📸 Gameplay Screenshots
+
+### Gameplay
+![Gameplay](screenshots/IMG_1313.jpg)
+
+### Explosion
+![Explosion](screenshots/IMG_1314.jpg)
+
+### Game Over
+![Game Over](screenshots/IMG_1315.jpg)
+
 ---
 
 Developed by **Hriday Arora**
