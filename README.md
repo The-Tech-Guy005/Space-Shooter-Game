@@ -1,6 +1,21 @@
 # 🚀 Space Shooter Game
 
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Pygame](https://img.shields.io/badge/Pygame-2.6-green)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+
 A classic arcade-style Space Shooter game built using Python and Pygame.
+
+## 🎮 Demo
+
+Classic arcade-style space shooter featuring:
+
+- Dynamic difficulty scaling
+- Explosion animations
+- Twinkling star background
+- Pause functionality
+- High score system
+- Progressive enemy speed
 
 ##  Features
 
